@@ -1,0 +1,25 @@
+# Ignorar la carpeta output y todo su contenido
+output/
+
+# Ignorar la carpeta logs y todo su contenido
+log/
+
+# Ignorar archivos temporales del sistema
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorar entornos virtuales de Python
+venv/
+env/
+.env/
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.swp
+
+# Ignorar archivo de logs
+*.log 
