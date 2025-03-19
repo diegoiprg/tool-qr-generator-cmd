@@ -1,4 +1,3 @@
-````markdown:README.md
 # Generador de Códigos QR
 
 Herramienta para generar códigos QR en múltiples formatos (PNG, SVG, PDF) con opciones de personalización.
@@ -7,65 +6,78 @@ Herramienta para generar códigos QR en múltiples formatos (PNG, SVG, PDF) con 
 
 ```bash
 pip install qrcode pillow reportlab validators
-````
+```
 
 ## Uso Básico
 
 ### Generar en todos los formatos
 
 ```bash
-python qr.py "https://www.ejemplo.com"
+python3 qr.py "https://www.ejemplo.com"
 ```
 
 ### Generar en formatos específicos
 
 ```bash
-python qr.py "https://www.ejemplo.com" --formats png pdf
+python3 qr.py "https://www.ejemplo.com" --formats png pdf
 ```
 
 ### Generar con opciones personalizadas
 
 ```bash
-python qr.py https://www.ejemplo.com --fill-color blue --filename mi_qr --compress
+python3 qr.py "https://www.ejemplo.com" --fill-color blue --filename mi_qr --compress
+```
+
+### Generar QR para WiFi
+
+```bash
+python3 qr.py "WPA,miSSID,miContraseña" --qr-type wifi
 ```
 
 ## Parámetros
 
-| Parámetro      | Descripción                       | Tipo   | Valor Default | Ejemplo                 |
-| -------------- | --------------------------------- | ------ | ------------- | ----------------------- |
-| `url`          | URL para el código QR (requerido) | string | -             | https://www.ejemplo.com |
-| `--formats`    | Formatos a generar                | lista  | png,svg,pdf   | --formats png svg       |
-| `--filename`   | Nombre base del archivo           | string | qr_code       | --filename mi_codigo    |
-| `--fill-color` | Color del QR                      | string | black         | --fill-color blue       |
-| `--back-color` | Color del fondo                   | string | white         | --back-color yellow     |
-| `--box-size`   | Tamaño de cada módulo             | int    | 10            | --box-size 15           |
-| `--border`     | Tamaño del borde                  | int    | 4             | --border 5              |
-| `--compress`   | Comprimir archivos en ZIP         | bool   | False         | --compress              |
+| Parámetro      | Descripción                         | Tipo   | Valor Default | Ejemplo                                               |
+| -------------- | ----------------------------------- | ------ | ------------- | ----------------------------------------------------- |
+| `data`         | Datos para el código QR (requerido) | string | -             | "https://www.ejemplo.com" o "WPA,miSSID,miContraseña" |
+| `--qr-type`    | Tipo de QR a generar                | string | url           | --qr-type wifi                                        |
+| `--formats`    | Formatos a generar                  | lista  | png,svg,pdf   | --formats png svg                                     |
+| `--filename`   | Nombre base del archivo             | string | qr_code       | --filename mi_codigo                                  |
+| `--fill-color` | Color del QR                        | string | black         | --fill-color blue                                     |
+| `--back-color` | Color del fondo                     | string | white         | --back-color yellow                                   |
+| `--box-size`   | Tamaño de cada módulo               | int    | 10            | --box-size 15                                         |
+| `--border`     | Tamaño del borde                    | int    | 4             | --border 5                                            |
+| `--compress`   | Comprimir archivos en ZIP           | bool   | False         | --compress                                            |
 
 ## Ejemplos de Uso
 
-1. **QR Simple**
+1. **QR Simple para URL**
 
 ```bash
-python qr.py "https://www.google.com"
+python3 qr.py "https://www.google.com"
 ```
 
-2. **QR con Colores Personalizados**
+2. **QR para WiFi**
 
 ```bash
-python qr.py "https://www.google.com" --fill-color blue --back-color yellow
+python3 qr.py "WPA,miSSID,miContraseña" --qr-type wifi
 ```
 
-3. **QR en Formatos Específicos**
+3. **QR con Colores Personalizados**
 
 ```bash
-python qr.py "https://www.google.com" --formats png svg
+python3 qr.py "https://www.google.com" --fill-color blue --back-color yellow
 ```
 
-4. **QR con Nombre Personalizado y Compresión**
+4. **QR en Formatos Específicos**
 
 ```bash
-python qr.py "https://www.google.com" --filename "mi_qr" --compress
+python3 qr.py "https://www.google.com" --formats png svg
+```
+
+5. **QR con Nombre Personalizado y Compresión**
+
+```bash
+python3 qr.py "https://www.google.com" --filename "mi_qr" --compress
 ```
 
 ## Estructura de Archivos Generados

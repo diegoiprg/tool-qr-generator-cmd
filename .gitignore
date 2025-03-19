@@ -23,3 +23,6 @@ env/
 
 # Ignorar archivo de logs
 *.log 
+
+# Ignorar entorno virtual
+enviroment/

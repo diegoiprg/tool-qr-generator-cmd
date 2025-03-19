@@ -64,12 +64,13 @@ def validate_url(url):
         return False
     return True
 
-def generate_qr(url, formats=None, filename=None, **kwargs):
+def generate_qr(data, qr_type='url', formats=None, filename=None, **kwargs):
     """
     Genera código QR en los formatos especificados
     
     Args:
-        url: URL a codificar
+        data: Datos a codificar (URL o información de WiFi)
+        qr_type: Tipo de QR a generar ('url' o 'wifi')
         formats: Lista de formatos ('png', 'svg', 'pdf') o None para todos
         filename: Nombre base para los archivos generados (sin extensión)
         fill_color: Color del QR (default: "black")
@@ -77,6 +78,13 @@ def generate_qr(url, formats=None, filename=None, **kwargs):
         box_size: Tamaño de cada caja (default: 10)
         border: Tamaño del borde (default: 4)
         version: Versión del QR (1-40, default: 10)
+    
+    Ejemplos:
+        Generar QR para URL:
+            python qr.py "https://www.ejemplo.com" --qr-type url
+        
+        Generar QR para WiFi:
+            python qr.py "WPA,miSSID,miContraseña" --qr-type wifi
     """
     # Crear carpetas y obtener timestamp
     output_path, timestamp = create_output_folder()
@@ -87,11 +95,17 @@ def generate_qr(url, formats=None, filename=None, **kwargs):
     
     logger.info(f"Carpeta de salida creada: {output_path}")
     
-    # Validar URL antes de continuar
-    if not validate_url(url):
+    # Validar datos antes de continuar
+    if qr_type == 'url':
+        if not validate_url(data):
+            return None
+        logger.info(f"Iniciando generación de QR para URL: {data}")
+    elif qr_type == 'wifi':
+        logger.info(f"Iniciando generación de QR para WiFi: {data}")
+        data = f"WIFI:T:{data['protocol']};S:{data['ssid']};P:{data['password']};;"
+    else:
+        logger.error("Tipo de QR no soportado")
         return None
-        
-    logger.info(f"Iniciando generación de QR para: {url}")
     
     # Si no se especifican formatos, usar todos
     if formats is None:
@@ -117,7 +131,7 @@ def generate_qr(url, formats=None, filename=None, **kwargs):
         box_size=config['box_size'],
         border=config['border'],
     )
-    qr.add_data(url)
+    qr.add_data(data)
     qr.make(fit=True)
     
     # Generar imagen QR
@@ -161,7 +175,8 @@ def compress_output(output_path, files):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Genera códigos QR en diferentes formatos')
-    parser.add_argument('url', help='URL a codificar en el QR')
+    parser.add_argument('data', help='Datos a codificar en el QR (URL o información de WiFi)')
+    parser.add_argument('--qr-type', choices=['url', 'wifi'], default='url', help='Tipo de QR a generar')
     parser.add_argument('--formats', nargs='+', choices=['png', 'svg', 'pdf'],
                       help='Formatos a generar (opcional, por defecto genera todos)')
     parser.add_argument('--filename', help='Nombre base para los archivos generados')
@@ -172,9 +187,17 @@ if __name__ == "__main__":
     parser.add_argument('--compress', action='store_true', help='Comprimir archivos en ZIP')
     
     args = parser.parse_args()
+    
+    if args.qr_type == 'wifi':
+        protocol, ssid, password = args.data.split(',')
+        data = {'protocol': protocol, 'ssid': ssid, 'password': password}
+    else:
+        data = args.data
+    
     files = generate_qr(
-        args.url, 
-        args.formats,
+        data, 
+        qr_type=args.qr_type,
+        formats=args.formats,
         filename=args.filename,
         fill_color=args.fill_color,
         back_color=args.back_color,
